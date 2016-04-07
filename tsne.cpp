@@ -694,7 +694,12 @@ bool TSNE::load_data(double** data, int* n, int* d, int* no_dims, double* theta,
     fread(theta, sizeof(double), 1, h);										// gradient accuracy
 	fread(perplexity, sizeof(double), 1, h);								// perplexity
 	fread(no_dims, sizeof(int), 1, h);                                      // output dimensionality
-	*data = (double*) malloc(*d * *n * sizeof(double));
+	printf("Number of samples %i\n",*n);
+        printf("Input dimension %i\n",*d);
+        printf("Theta: %f\n",*theta);
+        printf("Perplexity: %f\n",perplexity);
+        printf("Target dimensions %i\n",*no_dims);
+        *data = (double*) malloc(*d * *n * sizeof(double));
     if(*data == NULL) { printf("Memory allocation failed!\n"); exit(1); }
     fread(*data, sizeof(double), *n * *d, h);                               // the data
     if(!feof(h)) fread(rand_seed, sizeof(int), 1, h);                       // random seed
