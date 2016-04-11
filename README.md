@@ -15,7 +15,7 @@ Switch between Original TSNE and BH-SNE by commenting out `OriginalTSNE` or `BHT
 from BHTSNEDropInReplacementTSNE import tsne
 ```
 
-I removed the PCA reduction from the original TSNE. 
+I removed the PCA dim. reduction from the original TSNE. 
 
 - Changes in C-code: parameters are printed to stdout
 
