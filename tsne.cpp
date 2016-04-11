@@ -697,7 +697,7 @@ bool TSNE::load_data(double** data, int* n, int* d, int* no_dims, double* theta,
 	printf("Number of samples %i\n",*n);
         printf("Input dimension %i\n",*d);
         printf("Theta: %f\n",*theta);
-        printf("Perplexity: %f\n",perplexity);
+        printf("Perplexity: %f\n",*perplexity);
         printf("Target dimensions %i\n",*no_dims);
         *data = (double*) malloc(*d * *n * sizeof(double));
     if(*data == NULL) { printf("Memory allocation failed!\n"); exit(1); }
