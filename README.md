@@ -6,7 +6,7 @@ For my (Parttime) Master CS thesis project about deep learning I forked BHTSNE t
 
 **What it does:**
 
-`tsne.py` reads MNIST and plot a figure.
+`tsne.py` reads MNISTm (subset) and plot a figure.
 
 Switch between Original TSNE and BH-SNE by commenting out `OriginalTSNE` or `BHTSNEDropInReplacement` in `tsne.py`:
 
@@ -14,6 +14,8 @@ Switch between Original TSNE and BH-SNE by commenting out `OriginalTSNE` or `BHT
 #from OriginalTSNE import tsne
 from BHTSNEDropInReplacementTSNE import tsne
 ```
+
+I removed the PCA reduction from the original TSNE. 
 
 - Changes in C-code: parameters are printed to stdout
 
