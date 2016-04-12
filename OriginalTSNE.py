@@ -1,3 +1,6 @@
+# This is the original file from the tsne project (unchanged except this comment)
+# ===============================================================================
+#
 #  tsne.py
 #
 # Implementation of t-SNE in Python. The implementation was tested on Python 2.7.10, and it requires a working
