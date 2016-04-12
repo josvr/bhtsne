@@ -1,4 +1,5 @@
-# This is the original file from the tsne project (unchanged except this comment)
+# This is the original file from the tsne project. The only change is this 
+# commentlines and some print statements are changed to get it working on Python 3
 # ===============================================================================
 #
 #  tsne.py
