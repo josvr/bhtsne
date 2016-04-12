@@ -1,3 +1,11 @@
+# Drop in replacement for TSNE
+# Using BHSNE using the same interface contract as the original TSNE python implementation
+# (PS: The original TSNE impl is with PCA dim. reduction, and this one is not)
+#
+# This code is based on the original Python wrapper of the bhtsne project
+#
+# Jos van Roosmalen - 11-Apr-2016
+
 import numpy as Math
 from struct import pack,unpack,calcsize
 from os.path import join as path_join
@@ -5,8 +13,11 @@ import sys
 from subprocess import call
 
 def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
+  # First we create the datafile
   createDataFile(X,no_dims,initial_dims,perplexity)
+  # now we call the C compiled executable
   callBHTSNE()
+  # now we convert the result file back into a numpy array and return it
   return processResultFile()
 
 def createDataFile(X,no_dims,initial_dims,perplexity):
