@@ -17,6 +17,6 @@ from BHTSNEDropInReplacementTSNE import tsne
 
 I removed the PCA dim. reduction from the original TSNE. 
 
-- Changes in C-code: parameters are printed to stdout
+- Changes in C-code: parameters are printed to stdout (some parameters are now printed twice but it works for debugging)
 
 TODO: Generated intermediate files are not being removed. 
