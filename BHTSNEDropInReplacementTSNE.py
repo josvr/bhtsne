@@ -22,7 +22,7 @@ def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
   # now we call the C compiled executable
   callBHTSNE(postfix,perplexity)
   # now we convert the result file back into a numpy array and return it
-  return processResultFile(postfix)
+  return processResultFile(postfix,perplexity)
 
 # Support to build the file
 def createDataFile(path,postfix,count,no_dims,initial_dims,perplexity):
@@ -41,8 +41,8 @@ def closeDataFile(data_file):
 def callBHTSNE(postfix,perplexity):
   check_call(["./bh_tsne",postfix,str(perplexity)])    
 
-def processResultFile(postfix): 
-  with open('result'+postfix+'.dat', 'rb') as output_file:
+def processResultFile(postfix,perplexity): 
+  with open('result'+postfix+'Perplexity'+'{:10.6f}'.format(perplexity).strip()+'.dat', 'rb') as output_file:
     # The first two integers are just the number of samples and the
     #   dimensionality
     result_samples, result_dims = _read_unpack('ii', output_file)

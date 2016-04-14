@@ -10,7 +10,7 @@ if __name__ == "__main__":
 	print("Running example on 2,500 MNIST digits...")
 	X = Math.loadtxt("mnist2500_X.txt");
 	labels = Math.loadtxt("mnist2500_labels.txt");
-	Y = tsne(X, 2, len(X[0]), 20.0);
+	Y = tsne(X, 2, len(X[0]), 20.123);
 	Plot.scatter(Y[:,0], Y[:,1], 20, labels);
 	Plot.savefig("tsne.png");
 

@@ -725,22 +725,19 @@ bool TSNE::load_data(double** data, int* n, int* d, int* no_dims, double* theta,
 }
 
 // Function that saves map to a t-SNE file
-void TSNE::save_data(double* data, int* landmarks, double* costs, int n, int d) {
-
+void TSNE::save_data(double* data, int* landmarks, double* costs, int n, int d,double perplexity) {
+    char perplexityString[10000];
+    sprintf(perplexityString, "%f", perplexity);
 	// Open file, write first 2 integers and then the data
 	FILE *h;
     char *fileName = NULL;
-    if ( strlen(postfix) > 0) {
-       fileName = (char*) malloc(10+strlen(postfix)+1);
-       fileName[0] = '\0';
-       strcat(fileName,"result");
-       strcat(fileName,postfix);
-       strcat(fileName,".dat");
-    } else {
-       fileName = (char*) malloc(11);
-       fileName[0] = '\0';
-       strcat(fileName,"result.dat");
-    }
+    fileName = (char*) malloc(strlen("resultPerplexity.dat")+strlen(perplexityString)+strlen(postfix)+1);
+    fileName[0] = '\0';
+    strcat(fileName,"result");
+    strcat(fileName,postfix);
+    strcat(fileName,"Perplexity");
+    strcat(fileName,perplexityString);
+    strcat(fileName,".dat");
     
     printf("Save data to '%s'\n",fileName);
 
@@ -800,7 +797,7 @@ int main(int argc, char* argv[]) {
 		tsne->run(data, N, D, Y, no_dims, perplexity, theta, rand_seed, false);
 
 		// Save the results
-		tsne->save_data(Y, landmarks, costs, N, no_dims);
+		tsne->save_data(Y, landmarks, costs, N, no_dims,perplexity);
 
         // Clean up the memory
 		free(data); data = NULL;
