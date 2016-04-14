@@ -683,7 +683,7 @@ double TSNE::randn() {
 
 // Function that loads data from a t-SNE file
 // Note: this function does a malloc that should be freed elsewhere
-bool TSNE::load_data(double** data, int* n, int* d, int* no_dims, double* theta, double* perplexity, int* rand_seed) {
+bool TSNE::load_data(double** data, int* n, int* d, int* no_dims, double* theta,  int* rand_seed) {
 
 	// Open file, read first 2 integers, allocate memory, and read the data
     FILE *h;
@@ -707,13 +707,13 @@ bool TSNE::load_data(double** data, int* n, int* d, int* no_dims, double* theta,
 	fread(n, sizeof(int), 1, h);											// number of datapoints
 	fread(d, sizeof(int), 1, h);											// original dimensionality
     fread(theta, sizeof(double), 1, h);										// gradient accuracy
-	fread(perplexity, sizeof(double), 1, h);								// perplexity
+	double ignore;
+    fread(&ignore, sizeof(double), 1, h);					     			// perplexity
 	fread(no_dims, sizeof(int), 1, h);                                      // output dimensionality
 	printf("Number of samples %i\n",*n);
-        printf("Input dimension %i\n",*d);
-        printf("Theta: %f\n",*theta);
-        printf("Perplexity: %f\n",*perplexity);
-        printf("Target dimensions %i\n",*no_dims);
+    printf("Input dimension %i\n",*d);
+    printf("Theta: %f\n",*theta);
+    printf("Target dimensions %i\n",*no_dims);
         *data = (double*) malloc(*d * *n * sizeof(double));
     if(*data == NULL) { printf("Memory allocation failed!\n"); exit(1); }
     fread(*data, sizeof(double), *n * *d, h);                               // the data
@@ -761,25 +761,31 @@ void TSNE::save_data(double* data, int* landmarks, double* costs, int n, int d) 
 
 // Function that runs the Barnes-Hut implementation of t-SNE
 int main(int argc, char* argv[]) {
+    double perplexity;
     cout << "argc = " << argc << endl; 
     for(int i = 0; i < argc; i++) 
       cout << "argv[" << i << "] = " << argv[i] << endl; 
     if ( argc < 2 ) { 
-      postfix = new char[1];
-      postfix[0] = '\0';
+      printf("%s <postfix> <perplexity>\n",argv[0]);
+      return 1;
     } else { 
       postfix = argv[1];
+      sscanf(argv[2], "%lf", &perplexity);
+      if ( perplexity < 5 or perplexity > 50) { 
+         printf("Perplexity should be between 5 and 50 got %f\n",perplexity); 
+         return 1;
+      }
     }
     printf("Postfix '%s'\n",postfix);
     // Define some variables
 	int origN, N, D, no_dims, *landmarks;
 	double perc_landmarks;
-	double perplexity, theta, *data;
+	double theta, *data;
     int rand_seed = -1;
     TSNE* tsne = new TSNE();
 
     // Read the parameters and the dataset
-	if(tsne->load_data(&data, &origN, &D, &no_dims, &theta, &perplexity, &rand_seed)) {
+	if(tsne->load_data(&data, &origN, &D, &no_dims, &theta, &rand_seed)) {
 
 		// Make dummy landmarks
         N = origN;

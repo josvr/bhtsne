@@ -20,7 +20,7 @@ def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
   appendData(f,X)
   closeDataFile(f)
   # now we call the C compiled executable
-  callBHTSNE(postfix)
+  callBHTSNE(postfix,perplexity)
   # now we convert the result file back into a numpy array and return it
   return processResultFile(postfix)
 
@@ -38,8 +38,8 @@ def appendData(data_file,X):
 def closeDataFile(data_file):
   data_file.close()
 
-def callBHTSNE(arg):
-  check_call(["./bh_tsne",arg])    
+def callBHTSNE(postfix,perplexity):
+  check_call(["./bh_tsne",postfix,str(perplexity)])    
 
 def processResultFile(postfix): 
   with open('result'+postfix+'.dat', 'rb') as output_file:
