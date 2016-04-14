@@ -10,29 +10,39 @@ import numpy as Math
 from struct import pack,unpack,calcsize
 from os.path import join as path_join
 import sys
-from subprocess import call
+import gc
+from subprocess import check_call
 
 def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
+  postfix = "BHTSNEDropIn"
   # First we create the datafile
-  createDataFile(X,no_dims,initial_dims,perplexity)
+  f = createDataFile(".",postfix,len(X),no_dims,initial_dims,perplexity)
+  appendData(f,X)
+  closeDataFile(f)
   # now we call the C compiled executable
-  callBHTSNE()
+  callBHTSNE(postfix)
   # now we convert the result file back into a numpy array and return it
-  return processResultFile()
+  return processResultFile(postfix)
 
-def createDataFile(X,no_dims,initial_dims,perplexity):
+# Support to build the file
+def createDataFile(path,postfix,count,no_dims,initial_dims,perplexity):
   theta = 0.5
-  sample_count = len(X)
-  with open('data.dat', 'wb') as data_file:
-     data_file.write(pack('iiddi', sample_count, initial_dims, theta, perplexity, no_dims))
-     for sample in X:
-       data_file.write(pack('{}d'.format(len(sample)), *sample))
+  data_file = open(path+'/data'+str(postfix)+'.dat', 'wb')
+  data_file.write(pack('iiddi', count, initial_dims, theta, perplexity, no_dims))
+  return data_file
 
-def callBHTSNE():
-  call(["./bh_tsne"])    
+def appendData(data_file,X):
+  for sample in X:
+      data_file.write(pack('{}d'.format(len(sample)), *sample))
 
-def processResultFile(): 
-  with open('result.dat', 'rb') as output_file:
+def closeDataFile(data_file):
+  data_file.close()
+
+def callBHTSNE(arg):
+  check_call(["./bh_tsne",arg])    
+
+def processResultFile(postfix): 
+  with open('result'+postfix+'.dat', 'rb') as output_file:
     # The first two integers are just the number of samples and the
     #   dimensionality
     result_samples, result_dims = _read_unpack('ii', output_file)

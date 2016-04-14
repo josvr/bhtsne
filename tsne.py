@@ -1,5 +1,7 @@
+from matplotlib import use
+use('Agg')
 import numpy as Math
-import pylab as Plot
+import matplotlib.pyplot as Plot
 #from OriginalTSNE import tsne
 from BHTSNEDropInReplacementTSNE import tsne 
 

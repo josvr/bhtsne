@@ -41,9 +41,11 @@
 #include "vptree.h"
 #include "sptree.h"
 #include "tsne.h"
-
+#include <iostream>
 
 using namespace std;
+
+char *postfix;
 
 // Perform t-SNE
 void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexity, double theta, int rand_seed, bool skip_random_init) {
@@ -685,7 +687,20 @@ bool TSNE::load_data(double** data, int* n, int* d, int* no_dims, double* theta,
 
 	// Open file, read first 2 integers, allocate memory, and read the data
     FILE *h;
-	if((h = fopen("data.dat", "r+b")) == NULL) {
+    char *fileName = NULL;
+    if ( strlen(postfix) > 0) {  
+       fileName = (char*) malloc(8+strlen(postfix)+1);
+       fileName[0] = '\0';
+       strcat(fileName,"data");
+       strcat(fileName,postfix);
+       strcat(fileName,".dat");
+    } else {
+       fileName = (char*) malloc(9);
+       fileName[0] = '\0';
+       strcat(fileName,"data.dat"); 
+    }  
+    printf("Load data from '%s'\n",fileName);
+	if((h = fopen(fileName, "r+b")) == NULL) {
 		printf("Error: could not open data file.\n");
 		return false;
 	}
@@ -705,6 +720,7 @@ bool TSNE::load_data(double** data, int* n, int* d, int* no_dims, double* theta,
     if(!feof(h)) fread(rand_seed, sizeof(int), 1, h);                       // random seed
 	fclose(h);
 	printf("Read the %i x %i data matrix successfully!\n", *n, *d);
+    free(fileName);
 	return true;
 }
 
@@ -713,7 +729,22 @@ void TSNE::save_data(double* data, int* landmarks, double* costs, int n, int d) 
 
 	// Open file, write first 2 integers and then the data
 	FILE *h;
-	if((h = fopen("result.dat", "w+b")) == NULL) {
+    char *fileName = NULL;
+    if ( strlen(postfix) > 0) {
+       fileName = (char*) malloc(10+strlen(postfix)+1);
+       fileName[0] = '\0';
+       strcat(fileName,"result");
+       strcat(fileName,postfix);
+       strcat(fileName,".dat");
+    } else {
+       fileName = (char*) malloc(11);
+       fileName[0] = '\0';
+       strcat(fileName,"result.dat");
+    }
+    
+    printf("Save data to '%s'\n",fileName);
+
+	if((h = fopen(fileName, "w+b")) == NULL) {
 		printf("Error: could not open data file.\n");
 		return;
 	}
@@ -724,12 +755,22 @@ void TSNE::save_data(double* data, int* landmarks, double* costs, int n, int d) 
     fwrite(costs, sizeof(double), n, h);
     fclose(h);
 	printf("Wrote the %i x %i data matrix successfully!\n", n, d);
+    free(fileName);
 }
 
 
 // Function that runs the Barnes-Hut implementation of t-SNE
-int main() {
-
+int main(int argc, char* argv[]) {
+    cout << "argc = " << argc << endl; 
+    for(int i = 0; i < argc; i++) 
+      cout << "argv[" << i << "] = " << argv[i] << endl; 
+    if ( argc < 2 ) { 
+      postfix = new char[1];
+      postfix[0] = '\0';
+    } else { 
+      postfix = argv[1];
+    }
+    printf("Postfix '%s'\n",postfix);
     // Define some variables
 	int origN, N, D, no_dims, *landmarks;
 	double perc_landmarks;
