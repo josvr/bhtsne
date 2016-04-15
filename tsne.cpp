@@ -722,8 +722,20 @@ bool TSNE::load_data(double** data, int* n, int* d, int* no_dims, double* theta,
     printf("Target dimensions %i\n",*no_dims);
         *data = (double*) malloc(*d * *n * sizeof(double));
     if(*data == NULL) { printf("Memory allocation failed!\n"); exit(1); }
-    fread(*data, sizeof(double), *n * *d, h);                               // the data
-    if(!feof(h)) fread(rand_seed, sizeof(int), 1, h);                       // random seed
+    size_t nrRead; 
+    size_t expectedToBeRead = *n * *d;
+    nrRead = fread(*data, sizeof(double), expectedToBeRead , h);       
+    if ( nrRead != expectedToBeRead ) { 
+       printf("Number of read items does not match the expected number to be read" );
+       return false;
+    } 
+    if(!feof(h)) { 
+        fread(rand_seed, sizeof(int), 1, h); 
+    }
+    if (!feof(h)) { 
+        printf("Expected file end, but file is not ended.");  
+        return false;
+    } 
 	fclose(h);
 	printf("Read the %i x %i data matrix successfully!\n", *n, *d);
        fflush(stdout);
