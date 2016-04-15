@@ -31,7 +31,7 @@
  */
 
 
-
+#include <unistd.h>
 #include <math.h>
 #include <float.h>
 #include <stdlib.h>
@@ -739,6 +739,10 @@ void TSNE::save_data(double* data, int* landmarks, double* costs, int n, int d,d
     strcat(fileName,perplexityString);
     strcat(fileName,".dat");
     
+    char *doneFileName=(char*) malloc(strlen(fileName)+5+1);
+    doneFileName[0]='\0';
+    strcat(doneFileName,fileName);
+    strcat(doneFileName,".done");
     printf("Save data to '%s'\n",fileName);
 
 	if((h = fopen(fileName, "w+b")) == NULL) {
@@ -751,8 +755,13 @@ void TSNE::save_data(double* data, int* landmarks, double* costs, int n, int d,d
 	fwrite(landmarks, sizeof(int), n, h);
     fwrite(costs, sizeof(double), n, h);
     fclose(h);
-	printf("Wrote the %i x %i data matrix successfully!\n", n, d);
+    // ensure the done file get a later timestamp
+    sleep(1);
+    FILE *fp = fopen(doneFileName,"w");
+	fprintf(fp,"Wrote the %i x %i data matrix successfully!\n", n, d);
+    fclose(fp);
     free(fileName);
+    free(doneFileName);
 }
 
 
