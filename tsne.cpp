@@ -758,7 +758,7 @@ void TSNE::save_data(double* data, int* landmarks, double* costs, int n, int d,d
     // ensure the done file get a later timestamp
     sleep(1);
     FILE *fp = fopen(doneFileName,"w");
-	printf(fp,"Wrote the %i x %i data matrix successfully!\n", n, d);
+	printf("Wrote the %i x %i data matrix successfully!\n", n, d);
     fprintf(fp,"Wrote the %i x %i data matrix successfully!\n", n, d);
     fclose(fp);
     free(fileName);
