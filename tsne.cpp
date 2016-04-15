@@ -144,7 +144,8 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
 	// Perform main training loop
     if(exact) printf("Input similarities computed in %4.2f seconds!\nLearning embedding...\n", (float) (end - start) / CLOCKS_PER_SEC);
     else printf("Input similarities computed in %4.2f seconds (sparsity = %f)!\nLearning embedding...\n", (float) (end - start) / CLOCKS_PER_SEC, (double) row_P[N] / ((double) N * (double) N));
-    start = clock();
+   fflush(stdout);
+      start = clock();
 
 	for(int iter = 0; iter < max_iter; iter++) {
 
@@ -182,6 +183,7 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
                 total_time += (float) (end - start) / CLOCKS_PER_SEC;
                 printf("Iteration %d: error is %f (50 iterations in %4.2f seconds)\n", iter, C, (float) (end - start) / CLOCKS_PER_SEC);
             }
+             fflush(stdout);
 			start = clock();
         }
     }
@@ -699,7 +701,8 @@ bool TSNE::load_data(double** data, int* n, int* d, int* no_dims, double* theta,
        fileName[0] = '\0';
        strcat(fileName,"data.dat"); 
     }  
-    printf("Load data from '%s'\n",fileName);
+    printf("Load data from '%s'\n",fileName); 
+    fflush(stdout);
 	if((h = fopen(fileName, "r+b")) == NULL) {
 		printf("Error: could not open data file.\n");
 		return false;
@@ -720,6 +723,7 @@ bool TSNE::load_data(double** data, int* n, int* d, int* no_dims, double* theta,
     if(!feof(h)) fread(rand_seed, sizeof(int), 1, h);                       // random seed
 	fclose(h);
 	printf("Read the %i x %i data matrix successfully!\n", *n, *d);
+       fflush(stdout);
     free(fileName);
 	return true;
 }
