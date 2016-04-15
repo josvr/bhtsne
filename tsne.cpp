@@ -64,6 +64,8 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
     // Determine whether we are using an exact algorithm
     if(N - 1 < 3 * perplexity) { printf("Perplexity too large for the number of data points!\n"); exit(1); }
     printf("Using no_dims = %d, perplexity = %f, and theta = %f\n", no_dims, perplexity, theta);
+    fflush(stdout);
+
     bool exact = (theta == .0) ? true : false;
 
     // Set learning parameters
@@ -83,6 +85,7 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
 
     // Normalize input data (to prevent numerical problems)
     printf("Computing input similarities...\n");
+    fflush(stdout);
     start = clock();
     zeroMean(X, N, D);
     double max_X = .0;
