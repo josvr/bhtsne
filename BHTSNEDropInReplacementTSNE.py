@@ -41,8 +41,11 @@ def closeDataFile(data_file):
 def callBHTSNE(postfix,perplexity):
   check_call(["./bh_tsne",postfix,str(perplexity)])    
 
-def processResultFile(postfix,perplexity): 
-  with open('result'+postfix+'Perplexity'+'{:10.6f}'.format(perplexity).strip()+'.dat', 'rb') as output_file:
+def processResultFile(postfix,perplexity):
+  return processResultFileName('result'+postfix+'Perplexity'+'{:10.6f}'.format(perplexity).strip()+'.dat')
+
+def processResultFileName(fileName): 
+  with open(fileName, 'rb') as output_file:
     # The first two integers are just the number of samples and the
     #   dimensionality
     result_samples, result_dims = _read_unpack('ii', output_file)

@@ -6,15 +6,16 @@ import gzip
 import pickle
 import pylab as Plot
 #from OriginalTSNE import tsne
-from BHTSNEDropInReplacementTSNE import tsne 
+from BHTSNEDropInReplacementTSNE import processResultFileName
 import bloscpack as bp
 import pandas as pd
 import seaborn as sns
 import glob
 
 if __name__ == "__main__":
-	for l in range(0,8):
-		inputData =  "/home/josr/gitworkspace/msccscode/experiments/extractLayer"+str(l)+".gz"
+  files = ['resultLayer7Perplexity20.000000.dat','resultLayer7Perplexity30.000000.dat','resultLayer7Perplexity5.000000.dat','resultLayer7Perplexity50.000000.dat']
+  for f in files 
+        inputData =  f
 		outputLabels = '/tmp/data/testpartition*.blp.labels'
 		y = sorted(glob.glob(outputLabels))
 		print("Found labels "+str(y))
@@ -22,10 +23,9 @@ if __name__ == "__main__":
 		for i in range(1,len(y)):
 			tmpl = bp.unpack_ndarray_file(y[i])
 			labels = Math.concatenate((labels,tmpl))
-		X = pickle.load(gzip.open(inputData, 'rb'))
-		if X.shape[0] != labels.shape[0]:
+		Y = processResultFileName(inputData)
+		if Y.shape[0] != labels.shape[0]:
 			raise ValueError("X shape does not match label shape!!")	
-		Y = tsne(X, 2, len(X[0]), 20.0);	
 		print(Y.shape)
 		print(labels.shape)
 		df = pd.DataFrame(Y, columns=['x', 'y'])
@@ -39,6 +39,6 @@ if __name__ == "__main__":
 		ax = sns.kdeplot(class1.x, class1.y,cmap="Reds", alpha=0.4,shade=True, shade_lowest=False)
 		red = sns.color_palette("Reds")[-2]
 		blue = sns.color_palette("Blues")[-2]
-		ax.text(2.5, 8.2, "Class2", size=16, color=blue)
-		ax.text(3.8, 4.5, "Class1", size=16, color=red)
-		sns.plt.savefig("Layer"+str(l)+".png")
+		#ax.text(2.5, 8.2, "Class2", size=16, color=blue)
+		#ax.text(3.8, 4.5, "Class1", size=16, color=red)
+		sns.plt.savefig(inputDaa+".png")
