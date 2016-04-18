@@ -46,6 +46,7 @@
 using namespace std;
 
 char *postfix;
+int TOTAL_ITER = 1000;
 
 // Perform t-SNE
 void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexity, double theta, int rand_seed, bool skip_random_init) {
@@ -71,7 +72,7 @@ void TSNE::run(double* X, int N, int D, double* Y, int no_dims, double perplexit
     // Set learning parameters
     float total_time = .0;
     clock_t start, end;
-	int max_iter = 1000, stop_lying_iter = 250, mom_switch_iter = 250;
+	int max_iter = TOTAL_ITER, stop_lying_iter = 250, mom_switch_iter = 250;
 	double momentum = .5, final_momentum = .8;
 	double eta = 200.0;
 
@@ -791,8 +792,8 @@ int main(int argc, char* argv[]) {
     cout << "argc = " << argc << endl; 
     for(int i = 0; i < argc; i++) 
       cout << "argv[" << i << "] = " << argv[i] << endl; 
-    if ( argc < 2 ) { 
-      printf("%s <postfix> <perplexity>\n",argv[0]);
+    if ( argc < 2 || argc >= 5 ) { 
+      printf("%s <postfix> <perplexity> [iterations]\n",argv[0]);
       return 1;
     } else { 
       postfix = argv[1];
@@ -801,8 +802,11 @@ int main(int argc, char* argv[]) {
          printf("Perplexity should be between 5 and 50 got %f\n",perplexity); 
          return 1;
       }
+      if ( argc == 4) { 
+        sscanf(argv[3],"%d",&TOTAL_ITER);
+      }
     }
-    printf("Postfix '%s'\n",postfix);
+    printf("Postfix '%s'i Perplexity %lf Iterations %d\n",postfix,perplexity,TOTAL_ITER);
     // Define some variables
 	int origN, N, D, no_dims, *landmarks;
 	double perc_landmarks;
